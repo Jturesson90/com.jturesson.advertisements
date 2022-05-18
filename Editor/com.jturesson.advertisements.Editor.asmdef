@@ -1,10 +1,10 @@
 {
-    "name": "com.jturesson.advertisements",
+    "name": "com.jturesson.advertisements.Editor",
     "rootNamespace": "",
-    "references": [
-        "GUID:ff6de30450f3748908ff580f6ec64d9a"
+    "references": [],
+    "includePlatforms": [
+        "Editor"
     ],
-    "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": false,
