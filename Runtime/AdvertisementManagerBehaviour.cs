@@ -63,8 +63,7 @@ namespace Jturesson.Advertisements
                     _advertisementInitializer.EnablePerPlacementLoad);
 
             var success = await _unityAdsInitialization.Initialize();
-
-
+            
             return success;
         }
 
