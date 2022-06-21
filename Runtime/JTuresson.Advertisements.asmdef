@@ -1,6 +1,6 @@
 {
-    "name": "com.jturesson.advertisements",
-    "rootNamespace": "",
+    "name": "JTuresson.Advertisements",
+    "rootNamespace": "JTuresson.Advertisements",
     "references": [
         "GUID:ff6de30450f3748908ff580f6ec64d9a"
     ],
