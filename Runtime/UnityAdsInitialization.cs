@@ -5,18 +5,11 @@ namespace Jturesson.Advertisements
 {
     public class UnityAdsInitialization : IUnityAdsInitialization, IUnityAdsInitializationListener
     {
-        private readonly string _gameId;
-        private readonly bool _testMode;
-        private readonly bool _enablePerPlacementLoad;
         private readonly IAdvertisementWrapper _advertisementWrapper;
 
-        public UnityAdsInitialization(IAdvertisementWrapper advertisementWrapper, string gameId,
-            bool testMode = false, bool enablePerPlacementLoad = false)
+        public UnityAdsInitialization(IAdvertisementWrapper advertisementWrapper)
         {
             _advertisementWrapper = advertisementWrapper;
-            _gameId = gameId;
-            _testMode = testMode;
-            _enablePerPlacementLoad = enablePerPlacementLoad;
         }
 
         public void OnInitializationComplete()
@@ -31,11 +24,11 @@ namespace Jturesson.Advertisements
 
         private TaskCompletionSource<bool> _initializationTcs;
 
-        public async Task<bool> Initialize()
+        public async Task<bool> Initialize(string gameId, bool testMode = false,
+            bool enablePerPlacementLoad = false)
         {
             _initializationTcs = new TaskCompletionSource<bool>();
-
-            _advertisementWrapper.Initialize(_gameId, _testMode, _enablePerPlacementLoad, this);
+            _advertisementWrapper.Initialize(gameId, testMode, enablePerPlacementLoad, this);
 
             return await _initializationTcs.Task;
         }

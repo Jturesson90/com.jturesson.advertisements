@@ -20,8 +20,8 @@ namespace Tests.Runtime
             var wrapper = Substitute.For<IAdvertisementWrapper>();
 
             var adsInit =
-                new UnityAdsInitialization(wrapper, gameId, testMode, enablePerPlacementLoad);
-            adsInit.Initialize();
+                new UnityAdsInitialization(wrapper);
+            adsInit.Initialize(gameId, testMode, enablePerPlacementLoad);
             wrapper.Received().Initialize(gameId, testMode, enablePerPlacementLoad, adsInit);
         }
 
@@ -29,14 +29,14 @@ namespace Tests.Runtime
         public IEnumerator InitializeCanFail()
         {
             var wrapper = Substitute.For<IAdvertisementWrapper>();
-            var adsInit = new UnityAdsInitialization(wrapper, "gameId", true, true);
+            var adsInit = new UnityAdsInitialization(wrapper);
             wrapper.WhenForAnyArgs(x =>
                     x.Initialize(Arg.Any<string>(), Arg.Any<bool>(), Arg.Any<bool>(),
                         Arg.Any<IUnityAdsInitializationListener>()))
                 .Do(y => adsInit.OnInitializationFailed(UnityAdsInitializationError.AD_BLOCKER_DETECTED,
                     ""));
 
-            var a = adsInit.Initialize();
+            var a = adsInit.Initialize("gameId", true, true);
 
             yield return a.Result;
             Assert.That(a.Result, Is.False);
@@ -46,12 +46,12 @@ namespace Tests.Runtime
         public IEnumerator InitializeCanInitialize()
         {
             var wrapper = Substitute.For<IAdvertisementWrapper>();
-            var adsInit = new UnityAdsInitialization(wrapper, "gameId", true, true);
+            var adsInit = new UnityAdsInitialization(wrapper);
             wrapper.WhenForAnyArgs(x =>
                     x.Initialize(Arg.Any<string>(), Arg.Any<bool>(), Arg.Any<bool>(),
                         Arg.Any<IUnityAdsInitializationListener>()))
                 .Do(y => adsInit.OnInitializationComplete());
-            var a = adsInit.Initialize();
+            var a = adsInit.Initialize("gameId", true, true);
 
             yield return a.Result;
             Assert.That(a.Result, Is.True);

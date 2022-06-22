@@ -9,7 +9,7 @@ namespace Jturesson.Advertisements
     {
         public RuntimePlatform runtimePlatform;
         public string gameId;
-        public BannerAdPlacement banner;
+        public AdPlacementBanner banner;
         public AdPlacement interstitial;
         public AdPlacement reward;
     }

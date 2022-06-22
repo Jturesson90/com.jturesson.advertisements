@@ -8,6 +8,7 @@ using UnityEngine;
 using NUnit.Framework;
 using NSubstitute;
 using NSubstitute.Core;
+using UnityEngine.Advertisements;
 using UnityEngine.TestTools;
 using Object = UnityEngine.Object;
 
@@ -15,50 +16,72 @@ namespace Tests.Runtime
 {
     public class AdvertisementManagerBehaviourTests
     {
-        [SetUp]
-        public void SetUp()
-        {
-        }
-
         [UnityTest]
         public IEnumerator CanInitialize()
         {
-            /*
-                        var advertisementInitializer =
-                            Substitute.For<IAdvertisementInitializer>();
-            
-                        var unityAdsInitialization = Substitute.For<IUnityAdsInitialization>();
-                        unityAdsInitialization.Initialize().Returns(true);
-                        var advertisementWrapper = Substitute.For<IAdvertisementWrapper>();
-                        var applicationWrapper = Substitute.For<IApplicationWrapper>();
-                        applicationWrapper.Platform.Returns(RuntimePlatform.Android);
-                        advertisementInitializer.AdvertisementPlatformSettings.Returns(
-                            new AdvertisementPlatformSettings[]
-                            {
-                                new()
-                                {
-                                    runtimePlatform = RuntimePlatform.Android
-                                }
-                            });
-                        _advertisement.Inject(advertisementInitializer, unityAdsInitialization,
-                            advertisementWrapper, applicationWrapper);
-            
-                        var t = _advertisement.Initialize();
-            
-                        yield return t.Result;
-                        Assert.IsTrue(t.Result);*/
-            yield return null;
-        }
-
-        [UnityTest]
-        public IEnumerator CurrentRuntimeDontExistInListThrowsError()
-        {
-            var g = new GameObject("AdvertisementManagerBehaviour");
+            var g = new GameObject(
+                "AdvertisementManagerBehaviour CanInitialize");
             var advertisementManager = g.AddComponent<AdvertisementManagerBehaviour>();
             var advertisementInitializer =
                 Substitute.For<IAdvertisementInitializer>();
             var unityAdsInitialization = Substitute.For<IUnityAdsInitialization>();
-            unityAdsInitialization.Initialize().Returns(Task.FromResult(true));
+            unityAdsInitialization.Initialize(Arg.Any<string>(), Arg.Any<bool>(), Arg.Any<bool>())
+                .Returns(Task.FromResult(true));
+
+            var advertisementWrapper = Substitute.For<IAdvertisementWrapper>();
+            var applicationWrapper = Substitute.For<IApplicationWrapper>();
+            applicationWrapper.Platform.Returns(RuntimePlatform.Android);
+            advertisementInitializer.AdvertisementPlatformSettings.Returns(
+                new AdvertisementPlatformSettings[]
+                {
+                    new()
+                    {
+                        runtimePlatform = RuntimePlatform.Android,
+                        banner = new AdPlacementBanner()
+                        {
+                            enabled = true, bannerPosition = BannerPosition.CENTER,
+                            placementId = "banner"
+                        },
+                        interstitial = new AdPlacement() {enabled = true, placementId = "interstitial"},
+                        reward = new AdPlacement() {enabled = true, placementId = "reward"}
+                    }
+                });
+            var advertisementInterstitial = Substitute.For<IAdvertisementInterstitial>();
+            var advertisementBanner = Substitute.For<IAdvertisementBanner>();
+            var advertisementReward = Substitute.For<IAdvertisementReward>();
+
+            advertisementInterstitial.Load(Arg.Any<string>()).Returns(Task.FromResult(true));
+            advertisementBanner.Load(Arg.Any<string>(), Arg.Any<BannerPosition>())
+                .Returns(Task.FromResult(true));
+            advertisementReward.Load(Arg.Any<string>()).Returns(Task.FromResult(true));
+
+            advertisementManager.Inject(advertisementInitializer, unityAdsInitialization,
+                advertisementWrapper, applicationWrapper, advertisementInterstitial,
+                advertisementBanner, advertisementReward);
+
+
+            var s = Task.Run(() => advertisementManager.Initialize());
+            while (!s.IsCompleted)
+            {
+                yield return null;
+            }
+
+            Assert.IsTrue(s.Result);
+
+            Object.DestroyImmediate(g);
+        }
+
+        [UnityTest]
+        public IEnumerator CurrentRuntimePlatformWhenNotExistInListThrowsError()
+        {
+            var g = new GameObject(
+                "AdvertisementManagerBehaviour CurrentRuntimePlatformWhenNotExistInListThrowsError");
+            var advertisementManager = g.AddComponent<AdvertisementManagerBehaviour>();
+            var advertisementInitializer =
+                Substitute.For<IAdvertisementInitializer>();
+            var unityAdsInitialization = Substitute.For<IUnityAdsInitialization>();
+            unityAdsInitialization.Initialize(Arg.Any<string>(), Arg.Any<bool>(), Arg.Any<bool>())
+                .Returns(Task.FromResult(true));
 
             var advertisementWrapper = Substitute.For<IAdvertisementWrapper>();
             var applicationWrapper = Substitute.For<IApplicationWrapper>();
@@ -73,15 +96,18 @@ namespace Tests.Runtime
                 });
 
             advertisementManager.Inject(advertisementInitializer, unityAdsInitialization,
-                advertisementWrapper, applicationWrapper);
+                advertisementWrapper, applicationWrapper, null,
+                null, null);
             var s = Task.Run(() => advertisementManager.Initialize());
             while (!s.IsCompleted)
             {
                 yield return null;
             }
 
+            // Assert
             Assert.IsTrue(s.Exception is {InnerException: NotSupportedException});
 
+            // Clean up
             Object.DestroyImmediate(g);
         }
     }

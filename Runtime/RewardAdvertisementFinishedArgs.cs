@@ -2,8 +2,8 @@ namespace Jturesson.Advertisements
 {
     public struct RewardAdvertisementFinishedArgs
     {
-        public RewardAdvertisementResult ShowResult;
-        public string ReferenceId;
+        public readonly RewardAdvertisementResult ShowResult;
+        public readonly string ReferenceId;
 
         public RewardAdvertisementFinishedArgs(RewardAdvertisementResult showResult, string referenceId)
         {

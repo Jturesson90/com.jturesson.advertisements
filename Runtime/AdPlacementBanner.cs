@@ -4,7 +4,7 @@ using UnityEngine.Advertisements;
 namespace Jturesson.Advertisements
 {
     [Serializable]
-    public class BannerAdPlacement : AdPlacement
+    public class AdPlacementBanner : AdPlacement
     {
         public BannerPosition bannerPosition;
     }
