@@ -7,22 +7,23 @@ namespace Jturesson.Advertisements
     {
         private readonly IAdvertisementWrapper _advertisementWrapper;
 
-        private TaskCompletionSource<bool> _taskCompletionSource;
+        private readonly TaskCompletionSource<bool> _taskCompletionSource;
 
         private string _placementId;
+        private bool _isRunning;
 
         public AdvertisementBanner(IAdvertisementWrapper advertisementWrapper)
         {
             _advertisementWrapper = advertisementWrapper;
+            _taskCompletionSource = new TaskCompletionSource<bool>();
         }
 
         public Task<bool> Load(string placementId,
             BannerPosition bannerPosition = BannerPosition.BOTTOM_CENTER)
         {
-            if (_taskCompletionSource != null && _taskCompletionSource.Task.Status == TaskStatus.Running)
+            if (_isRunning)
                 return Task.FromResult(false);
-
-            _taskCompletionSource = new TaskCompletionSource<bool>();
+            _isRunning = true;
             _advertisementWrapper.BannerSetPosition(bannerPosition);
 
             var options = new BannerLoadOptions
@@ -72,11 +73,13 @@ namespace Jturesson.Advertisements
         private void OnBannerError(string message)
         {
             _taskCompletionSource.SetResult(false);
+            _isRunning = false;
         }
 
         private void OnBannerLoaded()
         {
             _taskCompletionSource.SetResult(true);
+            _isRunning = false;
         }
     }
 }

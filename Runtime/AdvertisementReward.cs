@@ -7,30 +7,32 @@ namespace Jturesson.Advertisements
     {
         private readonly IAdvertisementWrapper _advertisementWrapper;
 
-        private TaskCompletionSource<bool> _taskCompletionSource;
+        private readonly TaskCompletionSource<bool> _taskCompletionSource;
+        private bool _isRunning;
 
         public AdvertisementReward(IAdvertisementWrapper advertisementWrapper)
         {
             _advertisementWrapper = advertisementWrapper;
+            _taskCompletionSource = new TaskCompletionSource<bool>();
         }
 
         public void OnUnityAdsAdLoaded(string placementId)
         {
             _taskCompletionSource.SetResult(true);
+            _isRunning = false;
         }
 
         public void OnUnityAdsFailedToLoad(string placementId, UnityAdsLoadError error, string message)
         {
             _taskCompletionSource.SetResult(false);
+            _isRunning = false;
         }
 
         public Task<bool> Load(string placementId)
         {
-            if (_taskCompletionSource != null && _taskCompletionSource.Task.Status == TaskStatus.Running)
+            if (_isRunning)
                 return Task.FromResult(false);
-
-            _taskCompletionSource = new TaskCompletionSource<bool>();
-
+            _isRunning = true;
             _advertisementWrapper.Load(placementId, this);
 
             return _taskCompletionSource.Task;
