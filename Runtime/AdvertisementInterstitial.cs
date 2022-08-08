@@ -12,6 +12,7 @@ namespace Jturesson.Advertisements
 
         private readonly TaskCompletionSource<bool> _taskCompletionSource;
         private bool _isRunning;
+        private string _placementId;
 
         public AdvertisementInterstitial(IAdvertisementWrapper advertisementWrapper)
         {
@@ -37,8 +38,14 @@ namespace Jturesson.Advertisements
                 return Task.FromResult(false);
             _isRunning = true;
             _advertisementWrapper.Load(placementId, this);
+            _placementId = placementId;
 
             return _taskCompletionSource.Task;
+        }
+
+        public void Show()
+        {
+            _advertisementWrapper.Show(_placementId, null);
         }
     }
 }

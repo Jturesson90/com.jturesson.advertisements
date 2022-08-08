@@ -125,7 +125,7 @@ namespace Jturesson.Advertisements
 
         public void ShowInterstitial()
         {
-            throw new NotImplementedException();
+            _advertisementInterstitial.Show();
         }
 
         public bool RewardIsReadyAndEnabled()

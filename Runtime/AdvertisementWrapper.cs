@@ -31,5 +31,6 @@ namespace Jturesson.Advertisements
             Advertisement.Banner.SetPosition(position);
 
         public bool DebugMode => Advertisement.debugMode;
+        
     }
 }
