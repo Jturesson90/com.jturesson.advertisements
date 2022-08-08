@@ -1,30 +1,34 @@
 using System.Threading.Tasks;
+using UnityEngine;
 using UnityEngine.Advertisements;
 
 namespace Jturesson.Advertisements
 {
-    public class AdvertisementReward : IAdvertisementReward, IUnityAdsLoadListener
+    public class AdvertisementReward : IAdvertisementReward, IUnityAdsLoadListener, IUnityAdsShowListener
     {
         private readonly IAdvertisementWrapper _advertisementWrapper;
 
-        private readonly TaskCompletionSource<bool> _taskCompletionSource;
+        private readonly TaskCompletionSource<bool> _taskLoadCompletionSource;
+        private readonly TaskCompletionSource<RewardAdvertisementFinishedArgs> _taskShowCompletionSource;
         private bool _isRunning;
+        private string _placementId;
 
         public AdvertisementReward(IAdvertisementWrapper advertisementWrapper)
         {
             _advertisementWrapper = advertisementWrapper;
-            _taskCompletionSource = new TaskCompletionSource<bool>();
+            _taskLoadCompletionSource = new TaskCompletionSource<bool>();
+            _taskShowCompletionSource = new TaskCompletionSource<RewardAdvertisementFinishedArgs>();
         }
 
         public void OnUnityAdsAdLoaded(string placementId)
         {
-            _taskCompletionSource.SetResult(true);
+            _taskLoadCompletionSource.SetResult(true);
             _isRunning = false;
         }
 
         public void OnUnityAdsFailedToLoad(string placementId, UnityAdsLoadError error, string message)
         {
-            _taskCompletionSource.SetResult(false);
+            _taskLoadCompletionSource.SetResult(false);
             _isRunning = false;
         }
 
@@ -34,8 +38,36 @@ namespace Jturesson.Advertisements
                 return Task.FromResult(false);
             _isRunning = true;
             _advertisementWrapper.Load(placementId, this);
+            _placementId = placementId;
+            return _taskLoadCompletionSource.Task;
+        }
 
-            return _taskCompletionSource.Task;
+        public Task<RewardAdvertisementFinishedArgs> Show()
+        {
+            _advertisementWrapper.Show(_placementId, this);
+            return _taskShowCompletionSource.Task;
+        }
+
+        public void OnUnityAdsShowFailure(string placementId, UnityAdsShowError error, string message)
+        {
+            Debug.LogError(message);
+        }
+
+        public void OnUnityAdsShowStart(string placementId)
+        {
+        }
+
+        public void OnUnityAdsShowClick(string placementId)
+        {
+        }
+
+        public void OnUnityAdsShowComplete(string placementId,
+            UnityAdsShowCompletionState showCompletionState)
+        {
+            _taskShowCompletionSource.SetResult(
+                new RewardAdvertisementFinishedArgs((RewardAdvertisementResult) showCompletionState,
+                    "")
+            );
         }
     }
 }

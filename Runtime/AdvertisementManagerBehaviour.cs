@@ -136,7 +136,7 @@ namespace Jturesson.Advertisements
 
         public Task<RewardAdvertisementFinishedArgs> ShowReward()
         {
-            throw new NotImplementedException();
+            return _advertisementReward.Show();
         }
 
 

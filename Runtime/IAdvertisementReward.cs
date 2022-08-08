@@ -5,5 +5,6 @@ namespace Jturesson.Advertisements
     public interface IAdvertisementReward
     {
         Task<bool> Load(string placementId);
+        Task<RewardAdvertisementFinishedArgs> Show();
     }
 }
