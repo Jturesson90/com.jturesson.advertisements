@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.Advertisements;
 
-namespace Jturesson.Advertisements
+namespace JTuresson.Advertisements
 {
     [Serializable]
     public class AdvertisementPlatformSettings

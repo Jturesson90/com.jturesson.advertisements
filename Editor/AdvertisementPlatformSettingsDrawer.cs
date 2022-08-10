@@ -1,7 +1,7 @@
 using UnityEditor;
 using UnityEngine;
 
-namespace Jturesson.Advertisements.Editor
+namespace JTuresson.Advertisements.Editor
 {
     [CustomPropertyDrawer(typeof(AdvertisementPlatformSettings))]
     public class AdvertisementPlatformSettingsDrawer : PropertyDrawer

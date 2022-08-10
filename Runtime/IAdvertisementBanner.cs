@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using UnityEngine.Advertisements;
 
-namespace Jturesson.Advertisements
+namespace JTuresson.Advertisements
 {
     public interface IAdvertisementBanner
     {

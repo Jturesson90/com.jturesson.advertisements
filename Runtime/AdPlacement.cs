@@ -1,6 +1,6 @@
 using System;
 
-namespace Jturesson.Advertisements
+namespace JTuresson.Advertisements
 {
     [Serializable]
     public class AdPlacement

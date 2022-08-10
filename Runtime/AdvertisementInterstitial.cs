@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine.Advertisements;
 
-namespace Jturesson.Advertisements
+namespace JTuresson.Advertisements
 {
     public class AdvertisementInterstitial : IUnityAdsLoadListener, IAdvertisementInterstitial
     {

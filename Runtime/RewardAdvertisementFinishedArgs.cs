@@ -1,4 +1,4 @@
-namespace Jturesson.Advertisements
+namespace JTuresson.Advertisements
 {
     public struct RewardAdvertisementFinishedArgs
     {

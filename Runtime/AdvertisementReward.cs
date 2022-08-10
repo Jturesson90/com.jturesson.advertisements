@@ -1,8 +1,9 @@
+using System;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Advertisements;
 
-namespace Jturesson.Advertisements
+namespace JTuresson.Advertisements
 {
     public class AdvertisementReward : IAdvertisementReward, IUnityAdsLoadListener, IUnityAdsShowListener
     {
@@ -12,6 +13,7 @@ namespace Jturesson.Advertisements
         private readonly TaskCompletionSource<RewardAdvertisementFinishedArgs> _taskShowCompletionSource;
         private bool _isRunning;
         private string _placementId;
+        public event Action<bool> IsLoadedChanged;
 
         public AdvertisementReward(IAdvertisementWrapper advertisementWrapper)
         {
@@ -24,16 +26,25 @@ namespace Jturesson.Advertisements
         {
             _taskLoadCompletionSource.SetResult(true);
             _isRunning = false;
+            OnIsLoadedChanged(true);
         }
 
         public void OnUnityAdsFailedToLoad(string placementId, UnityAdsLoadError error, string message)
         {
             _taskLoadCompletionSource.SetResult(false);
             _isRunning = false;
+
+            OnIsLoadedChanged(false);
+            if (error != UnityAdsLoadError.INITIALIZE_FAILED &&
+                error != UnityAdsLoadError.INVALID_ARGUMENT)
+            {
+                Load(placementId);
+            }
         }
 
         public Task<bool> Load(string placementId)
         {
+            if (_advertisementWrapper.IsReady(placementId)) return Task.FromResult(true);
             if (_isRunning)
                 return Task.FromResult(false);
             _isRunning = true;
@@ -55,6 +66,7 @@ namespace Jturesson.Advertisements
 
         public void OnUnityAdsShowStart(string placementId)
         {
+            OnIsLoadedChanged(false);
         }
 
         public void OnUnityAdsShowClick(string placementId)
@@ -68,6 +80,12 @@ namespace Jturesson.Advertisements
                 new RewardAdvertisementFinishedArgs((RewardAdvertisementResult) showCompletionState,
                     "")
             );
+            Load(placementId);
+        }
+
+        private void OnIsLoadedChanged(bool obj)
+        {
+            IsLoadedChanged?.Invoke(obj);
         }
     }
 }

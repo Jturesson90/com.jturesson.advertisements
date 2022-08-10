@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
 
-namespace Jturesson.Advertisements
+namespace JTuresson.Advertisements
 {
     public class AdvertisementManagerBehaviour : MonoBehaviour, IAdvertisementManager
     {
@@ -22,7 +22,21 @@ namespace Jturesson.Advertisements
 
         private bool _injected = false;
 
+        private void OnEnable()
+        {
+            if (_advertisementReward != null)
+            {
+                _advertisementReward.IsLoadedChanged += RewardIsReadyChanged;
+            }
+        }
 
+        private void OnDisable()
+        {
+            if (_advertisementReward != null)
+            {
+                _advertisementReward.IsLoadedChanged -= RewardIsReadyChanged;
+            }
+        }
 #if UNITY_EDITOR
         public void Inject(IAdvertisementInitializer advertisementInitializer,
             IUnityAdsInitialization unityAdsInitialization,
@@ -134,9 +148,9 @@ namespace Jturesson.Advertisements
                    _advertisementWrapper.IsReady(_platformSettings.reward.placementId);
         }
 
-        public Task<RewardAdvertisementFinishedArgs> ShowReward()
+        public async Task<RewardAdvertisementFinishedArgs> ShowReward()
         {
-            return _advertisementReward.Show();
+            return await _advertisementReward.Show();
         }
 
 

@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Jturesson.Advertisements;
+using JTuresson.Advertisements;
 using NSubstitute;
 using NUnit.Framework;
 using UnityEngine.TestTools;
@@ -29,7 +29,7 @@ namespace Tests.Runtime
         {
             var wrapper = Substitute.For<IAdvertisementWrapper>();
             IAdvertisementReward advertisementReward =
-                new Jturesson.Advertisements.AdvertisementReward(wrapper);
+                new JTuresson.Advertisements.AdvertisementReward(wrapper);
             string placementId = "placementIdTest";
 
             // Need to load to set the placementId;
@@ -61,7 +61,7 @@ namespace Tests.Runtime
         {
             var wrapper = Substitute.For<IAdvertisementWrapper>();
             IAdvertisementReward advertisementReward =
-                new Jturesson.Advertisements.AdvertisementReward(wrapper);
+                new JTuresson.Advertisements.AdvertisementReward(wrapper);
             string placementId = "placementIdTest";
 
             // Need to load to set the placementId;

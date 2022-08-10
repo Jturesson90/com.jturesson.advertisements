@@ -1,6 +1,6 @@
 using UnityEngine.Advertisements;
 
-namespace Jturesson.Advertisements
+namespace JTuresson.Advertisements
 {
     public class AdvertisementWrapper : IAdvertisementWrapper
     {

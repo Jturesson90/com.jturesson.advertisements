@@ -1,7 +1,7 @@
 using System;
 using UnityEngine.Advertisements;
 
-namespace Jturesson.Advertisements
+namespace JTuresson.Advertisements
 {
     [Serializable]
     public class AdPlacementBanner : AdPlacement

@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.ExceptionServices;
 using System.Threading.Tasks;
-using Jturesson.Advertisements;
+using JTuresson.Advertisements;
 using UnityEngine;
 using NUnit.Framework;
 using NSubstitute;

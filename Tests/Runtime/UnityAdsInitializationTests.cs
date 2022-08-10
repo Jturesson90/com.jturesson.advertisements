@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Jturesson.Advertisements;
+using JTuresson.Advertisements;
 using NSubstitute;
 using NUnit.Framework;
 using UnityEngine;

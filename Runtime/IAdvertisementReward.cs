@@ -1,10 +1,12 @@
+using System;
 using System.Threading.Tasks;
 
-namespace Jturesson.Advertisements
+namespace JTuresson.Advertisements
 {
     public interface IAdvertisementReward
     {
         Task<bool> Load(string placementId);
         Task<RewardAdvertisementFinishedArgs> Show();
+        event Action<bool> IsLoadedChanged;
     }
 }

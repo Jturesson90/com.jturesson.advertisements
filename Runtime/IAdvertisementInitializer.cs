@@ -2,7 +2,7 @@ using System;
 using UnityEditor;
 using UnityEngine.Advertisements;
 
-namespace Jturesson.Advertisements
+namespace JTuresson.Advertisements
 {
     public interface IAdvertisementInitializer
     {

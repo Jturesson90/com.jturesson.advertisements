@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 
-namespace Jturesson.Advertisements
+namespace JTuresson.Advertisements
 {
     public interface IAdvertisementInterstitial
     {

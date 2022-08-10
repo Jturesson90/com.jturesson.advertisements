@@ -1,6 +1,6 @@
 {
     "name": "JTuresson.Advertisements.Editor",
-    "rootNamespace": "Jturesson.Advertisements.Editor",
+    "rootNamespace": "JTuresson.Advertisements.Editor",
     "references": [
         "GUID:4b460a3c7f46361458da609e67e1cec1"
     ],
