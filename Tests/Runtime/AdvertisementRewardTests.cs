@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using JTuresson.Advertisements;
 using NSubstitute;
@@ -18,9 +17,8 @@ namespace Tests.Runtime
         public void RewardAdvertisementFinishedArgsHasCorrectMembers(RewardAdvertisementResult e,
             string referenceId)
         {
-            var rewardAdArgs = new RewardAdvertisementFinishedArgs(e, referenceId);
+            var rewardAdArgs = new RewardAdvertisementFinishedArgs(e);
 
-            Assert.That(rewardAdArgs.ReferenceId, Is.EqualTo(referenceId));
             Assert.That(rewardAdArgs.ShowResult, Is.EqualTo(e));
         }
 
@@ -28,30 +26,26 @@ namespace Tests.Runtime
         public IEnumerator RewardAdvertisementShowCompleted()
         {
             var wrapper = Substitute.For<IAdvertisementWrapper>();
-            IAdvertisementReward advertisementReward =
-                new JTuresson.Advertisements.AdvertisementReward(wrapper);
             string placementId = "placementIdTest";
-
             // Need to load to set the placementId;
             wrapper.WhenForAnyArgs(x =>
-                    x.Load(Arg.Any<string>(), Arg.Any<IUnityAdsLoadListener>()))
+                    x.Load(placementId, Arg.Any<IUnityAdsLoadListener>()))
                 .Do(y => y.Arg<IUnityAdsLoadListener>()
                     .OnUnityAdsAdLoaded(placementId));
-            var i = Task.Run(() => advertisementReward.Load(placementId));
-            while (!i.IsCompleted)
-            {
-                yield return null;
-            }
-
             wrapper.WhenForAnyArgs(x =>
-                    x.Show(Arg.Any<string>(), Arg.Any<IUnityAdsShowListener>()))
+                    x.Show(placementId, Arg.Any<IUnityAdsShowListener>()))
                 .Do(y => y.Arg<IUnityAdsShowListener>()
-                    .OnUnityAdsShowComplete("", UnityAdsShowCompletionState.COMPLETED));
-            var j = Task.Run(() => advertisementReward.Show());
-            while (!j.IsCompleted)
-            {
-                yield return null;
-            }
+                    .OnUnityAdsShowComplete(placementId, UnityAdsShowCompletionState.COMPLETED));
+
+            IAdvertisementReward advertisementReward =
+                new AdvertisementReward(wrapper);
+
+
+            var i = advertisementReward.Load(placementId);
+            yield return i.Result;
+            var j = advertisementReward.Show();
+            yield return j.Result;
+
 
             Assert.IsTrue(j.Result.ShowResult == RewardAdvertisementResult.Completed);
         }
@@ -61,7 +55,7 @@ namespace Tests.Runtime
         {
             var wrapper = Substitute.For<IAdvertisementWrapper>();
             IAdvertisementReward advertisementReward =
-                new JTuresson.Advertisements.AdvertisementReward(wrapper);
+                new AdvertisementReward(wrapper);
             string placementId = "placementIdTest";
 
             // Need to load to set the placementId;
@@ -70,20 +64,14 @@ namespace Tests.Runtime
                 .Do(y => y.Arg<IUnityAdsLoadListener>()
                     .OnUnityAdsAdLoaded(placementId));
             var i = Task.Run(() => advertisementReward.Load(placementId));
-            while (!i.IsCompleted)
-            {
-                yield return null;
-            }
+            yield return i.Result;
 
             wrapper.WhenForAnyArgs(x =>
                     x.Show(Arg.Any<string>(), Arg.Any<IUnityAdsShowListener>()))
                 .Do(y => y.Arg<IUnityAdsShowListener>()
-                    .OnUnityAdsShowComplete("", UnityAdsShowCompletionState.SKIPPED));
+                    .OnUnityAdsShowComplete(placementId, UnityAdsShowCompletionState.SKIPPED));
             var j = Task.Run(() => advertisementReward.Show());
-            while (!j.IsCompleted)
-            {
-                yield return null;
-            }
+            yield return j.Result;
 
             Assert.IsTrue(j.Result.ShowResult == RewardAdvertisementResult.Skipped);
         }

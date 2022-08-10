@@ -151,7 +151,7 @@ namespace Tests.Runtime
             wrapper.WhenForAnyArgs(x =>
                     x.Load(Arg.Any<string>(), Arg.Any<IUnityAdsLoadListener>()))
                 .Do(y => y.Arg<IUnityAdsLoadListener>()
-                    .OnUnityAdsFailedToLoad("gameId", UnityAdsLoadError.NO_FILL, ""));
+                    .OnUnityAdsFailedToLoad("gameId", UnityAdsLoadError.INITIALIZE_FAILED, ""));
 
             var a = reward.Load("gameId");
 
