@@ -51,7 +51,15 @@ namespace JTuresson.Advertisements
             if (IsRunning())
                 return Task.FromResult(false);
             _taskLoadCompletionSource = new TaskCompletionSource<bool>();
-            _advertisementWrapper.Load(placementId, this);
+            bool isLoaded = _advertisementWrapper.IsReady(placementId);
+            if (!isLoaded)
+                _advertisementWrapper.Load(placementId, this);
+            else
+            {
+                _taskLoadCompletionSource.SetResult(true);
+                Debug.Log($"AdvertisementReward - {placementId} already Ready");
+            }
+
             Debug.Log($"AdvertisementReward - Load({placementId}) setting _placementId");
             _placementId = placementId;
 
