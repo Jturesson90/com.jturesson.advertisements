@@ -24,6 +24,7 @@ namespace JTuresson.Advertisements
 
         private void OnEnable()
         {
+            
             if (_advertisementReward != null)
             {
                 _advertisementReward.IsLoadedChanged += RewardIsReadyChanged;

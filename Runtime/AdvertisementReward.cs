@@ -11,7 +11,6 @@ namespace JTuresson.Advertisements
 
         private TaskCompletionSource<bool> _taskLoadCompletionSource;
         private TaskCompletionSource<RewardAdvertisementFinishedArgs> _taskShowCompletionSource;
-        private bool _isRunning;
         private string _placementId;
         public event Action<bool> IsLoadedChanged;
 
@@ -22,15 +21,15 @@ namespace JTuresson.Advertisements
 
         public void OnUnityAdsAdLoaded(string placementId)
         {
+            Debug.Log($"AdvertisementReward - OnUnityAdsLoaded({placementId}) ");
             _taskLoadCompletionSource.SetResult(true);
-            _isRunning = false;
             OnIsLoadedChanged(true);
         }
 
         public void OnUnityAdsFailedToLoad(string placementId, UnityAdsLoadError error, string message)
         {
+            Debug.LogError($"AdvertisementReward - OnUnityAdsFailedToLoad({placementId}) " + message);
             _taskLoadCompletionSource.SetResult(false);
-            _isRunning = false;
 
             OnIsLoadedChanged(false);
             if (error != UnityAdsLoadError.INITIALIZE_FAILED &&
@@ -40,13 +39,20 @@ namespace JTuresson.Advertisements
             }
         }
 
+        private bool IsRunning()
+        {
+            return _taskLoadCompletionSource != null &&
+                   _taskLoadCompletionSource.Task.Status == TaskStatus.Running;
+        }
+
         public Task<bool> Load(string placementId)
         {
-            if (_isRunning)
+            Debug.Log($"AdvertisementReward - Load({placementId})");
+            if (IsRunning())
                 return Task.FromResult(false);
-            _isRunning = true;
             _taskLoadCompletionSource = new TaskCompletionSource<bool>();
             _advertisementWrapper.Load(placementId, this);
+            Debug.Log($"AdvertisementReward - Load({placementId}) setting _placementId");
             _placementId = placementId;
 
             return _taskLoadCompletionSource.Task;
@@ -63,6 +69,7 @@ namespace JTuresson.Advertisements
 
         public Task<RewardAdvertisementFinishedArgs> Show()
         {
+            Debug.Log($"AdvertisementReward - Show({_placementId}) ");
             _taskShowCompletionSource = new TaskCompletionSource<RewardAdvertisementFinishedArgs>();
             _advertisementWrapper.Show(_placementId, this);
 
@@ -71,21 +78,26 @@ namespace JTuresson.Advertisements
 
         public void OnUnityAdsShowFailure(string placementId, UnityAdsShowError error, string message)
         {
-            Debug.LogError(message);
+            Debug.LogError(
+                $"AdvertisementReward - OnUnityAdsShowFailure {placementId} {error} {message} ");
         }
 
         public void OnUnityAdsShowStart(string placementId)
         {
+            Debug.Log($"AdvertisementReward - OnUnityAdsShowStart - {placementId}");
             OnIsLoadedChanged(false);
         }
 
         public void OnUnityAdsShowClick(string placementId)
         {
+            Debug.Log($"AdvertisementReward - OnUnityAdsShowClick - {placementId}");
         }
 
         public void OnUnityAdsShowComplete(string placementId,
             UnityAdsShowCompletionState showCompletionState)
         {
+            Debug.Log(
+                $"AdvertisementReward - OnUnityAdsShowComplete - {placementId} UnityAdsShowCompletionState.{showCompletionState}");
             _taskShowCompletionSource.SetResult(
                 new RewardAdvertisementFinishedArgs((RewardAdvertisementResult) showCompletionState)
             );
@@ -94,6 +106,7 @@ namespace JTuresson.Advertisements
 
         private void OnIsLoadedChanged(bool obj)
         {
+            Debug.Log($"AdvertisementReward - OnIsLoadedChanged - IsLoaded = {obj}");
             IsLoadedChanged?.Invoke(obj);
         }
     }
