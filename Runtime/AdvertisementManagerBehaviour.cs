@@ -24,7 +24,6 @@ namespace JTuresson.Advertisements
 
         private void OnEnable()
         {
-            
             if (_advertisementReward != null)
             {
                 _advertisementReward.IsLoadedChanged += RewardIsReadyChanged;
@@ -100,13 +99,13 @@ namespace JTuresson.Advertisements
             var interstitial = _platformSettings.interstitial;
             if (interstitial.enabled)
             {
-                li.Add(_advertisementBanner.Load(interstitial.placementId));
+                li.Add(_advertisementInterstitial.Load(interstitial.placementId));
             }
 
             var reward = _platformSettings.reward;
             if (reward.enabled)
             {
-                li.Add(_advertisementBanner.Load(reward.placementId));
+                li.Add(_advertisementReward.Load(reward.placementId));
             }
 
 
