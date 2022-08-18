@@ -1,7 +1,7 @@
 {
   "name": "com.jturesson.advertisements",
   "displayName": "Jesper Turesson - Advertisements",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "unity": "2021.3",
   "description": "Easy setup with Unity Advertisements",
   "keywords": [
