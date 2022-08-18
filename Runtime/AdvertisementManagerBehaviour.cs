@@ -21,6 +21,7 @@ namespace JTuresson.Advertisements
         private IAdvertisementReward _advertisementReward;
 
         private bool _injected = false;
+        public bool Initialized { get; private set; }
 
         private void OnEnable()
         {
@@ -57,6 +58,8 @@ namespace JTuresson.Advertisements
             _advertisementReward = advertisementReward;
         }
 #endif
+
+
         private void Setup()
         {
             _advertisementWrapper = new AdvertisementWrapper();
@@ -75,7 +78,12 @@ namespace JTuresson.Advertisements
         public async Task<bool> Initialize()
         {
             if (!_injected) Setup();
+            if (Initialized)
+            {
+                throw new InvalidOperationException("AdvertisementManager already initialized.");
+            }
 
+            Initialized = true;
             _platformSettings =
                 _advertisementInitializer.AdvertisementPlatformSettings
                     .FirstOrDefault(IsCurrentApplicationPlatform);
