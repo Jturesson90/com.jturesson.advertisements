@@ -9,13 +9,13 @@
     "Advertisements",
     "Jesper Turesson"
   ],
-  "homepage": "https://github.com/3d-group/unity-simple-notifications.git",
+  "homepage": "https://github.com/Jturesson90/com.jturesson.advertisements.git",
   "bugs": {
-    "url": "https://github.com/3d-group/unity-simple-notifications/issues"
+    "url": "https://github.com/Jturesson90/com.jturesson.advertisements/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/3d-group/unity-simple-notifications.git"
+    "url": "git+ssh://git@github.com/Jturesson90/com.jturesson.advertisements.git"
   },
   "license": "MIT",
   "author": "Jesper Turesson",
@@ -24,6 +24,5 @@
   },
   "dependencies": {
     "com.unity.ads": "3.7.5"
-  },
-  "type": "library"
+  }
 }
