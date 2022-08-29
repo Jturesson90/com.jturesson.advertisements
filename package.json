@@ -1,7 +1,7 @@
 {
   "name": "com.jturesson.advertisements",
   "displayName": "Jesper Turesson - Advertisements",
-  "version": "0.1.7",
+  "version": "0.1.8",
   "unity": "2021.3",
   "description": "Easy setup with Unity Advertisements",
   "keywords": [
@@ -26,5 +26,8 @@
   },
   "dependencies": {
     "com.unity.ads": "3.7.5"
+  },
+  "publishConfig": {
+    "registry": "https://npm.tornberg.me"
   }
 }
