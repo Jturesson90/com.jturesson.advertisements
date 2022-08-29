@@ -1,7 +1,7 @@
 {
   "name": "com.jturesson.advertisements",
   "displayName": "Jesper Turesson - Advertisements",
-  "version": "0.0.6",
+  "version": "0.1.7",
   "unity": "2021.3",
   "description": "Easy setup with Unity Advertisements",
   "keywords": [
@@ -17,6 +17,8 @@
     "type": "git",
     "url": "git+ssh://git@github.com/Jturesson90/com.jturesson.advertisements.git"
   },
+  "documentationUrl": "https://github.com/Jturesson90/com.jturesson.advertisements/blob/main/README.md",
+  "changelogUrl": "https://github.com/Jturesson90/com.jturesson.advertisements/blob/main/CHANGELOG.md",
   "license": "MIT",
   "author": "Jesper Turesson",
   "scripts": {
