@@ -6,13 +6,14 @@ using UnityEngine.Advertisements;
 
 namespace JTuresson.Advertisements
 {
-    public class AdvertisementInterstitial : IUnityAdsLoadListener, IAdvertisementInterstitial
+    public class AdvertisementInterstitial : IUnityAdsLoadListener, IAdvertisementInterstitial, IUnityAdsShowListener
     {
         private readonly IAdvertisementWrapper _advertisementWrapper;
 
         private readonly TaskCompletionSource<bool> _taskCompletionSource;
         private bool _isRunning;
         private string _placementId;
+        public bool IsLoaded { get; private set; }
 
         public AdvertisementInterstitial(IAdvertisementWrapper advertisementWrapper)
         {
@@ -24,6 +25,7 @@ namespace JTuresson.Advertisements
         {
             _taskCompletionSource.SetResult(true);
             _isRunning = false;
+            IsLoaded = true;
         }
 
         public void OnUnityAdsFailedToLoad(string placementId, UnityAdsLoadError error, string message)
@@ -34,7 +36,7 @@ namespace JTuresson.Advertisements
 
         public Task<bool> Load(string placementId)
         {
-            if (_isRunning)
+            if (_isRunning || IsLoaded)
                 return Task.FromResult(false);
             _isRunning = true;
             _advertisementWrapper.Load(placementId, this);
@@ -46,6 +48,26 @@ namespace JTuresson.Advertisements
         public void Show()
         {
             _advertisementWrapper.Show(_placementId, null);
+        }
+
+        public void OnUnityAdsShowFailure(string placementId, UnityAdsShowError error, string message)
+        {
+            Load(_placementId);
+        }
+
+        public void OnUnityAdsShowStart(string placementId)
+        {
+            IsLoaded = false;
+        }
+
+        public void OnUnityAdsShowClick(string placementId)
+        {
+        }
+
+        public void OnUnityAdsShowComplete(string placementId, UnityAdsShowCompletionState showCompletionState)
+        {
+            IsLoaded = false;
+            Load(_placementId);
         }
     }
 }

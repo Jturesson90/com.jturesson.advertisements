@@ -141,8 +141,7 @@ namespace JTuresson.Advertisements
 
         public bool InterstitialIsReadyAndEnabled()
         {
-            return _platformSettings.interstitial.enabled &&
-                   _advertisementWrapper.IsReady(_platformSettings.interstitial.placementId);
+            return _platformSettings.interstitial.enabled && _advertisementInterstitial.IsLoaded;
         }
 
         public void ShowInterstitial()
@@ -152,8 +151,7 @@ namespace JTuresson.Advertisements
 
         public bool RewardIsReadyAndEnabled()
         {
-            return _platformSettings.reward.enabled &&
-                   _advertisementWrapper.IsReady(_platformSettings.reward.placementId);
+            return _platformSettings.reward.enabled && _advertisementReward.IsLoaded;
         }
 
         public async Task<RewardAdvertisementFinishedArgs> ShowReward()

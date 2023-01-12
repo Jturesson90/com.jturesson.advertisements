@@ -6,5 +6,6 @@ namespace JTuresson.Advertisements
     {
         Task<bool> Load(string placementId);
         void Show();
+        bool IsLoaded { get; }
     }
 }
